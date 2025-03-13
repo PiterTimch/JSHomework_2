@@ -3,7 +3,9 @@
     const modal = document.getElementById("fileModal");
     const closeModal = document.getElementById("closeModal");
     const cancelBtn = document.getElementById("cancelBtn");
+    const saveBtn = document.getElementById("saveBtn");
     const previewImage = document.getElementById("previewImage");
+    const loadedImage = document.getElementById("loadedImage");
 
     let uploadedImageURL;
     let cropper;
@@ -54,6 +56,8 @@
         modal.classList.add("hidden");
         modal.classList.remove("flex");
 
+        fileInput.value = "";
+
         if (cropper) {
             cropper.destroy();
             cropper = null;
@@ -65,7 +69,28 @@
         }
     }
 
+    function saveImage() {
+        if (cropper) {
+            var base64 = cropper.getCroppedCanvas().toDataURL();
+            console.log("Get data url", base64);
+
+            loadNewImage(base64);
+        }
+
+        closeModalWindow()
+    }
+
+    function loadNewImage(path) {
+        if (loadedImage.classList.contains("hidden")) {
+            loadedImage.classList.remove("hidden");
+            loadedImage.classList.add("h-[200px]");
+        }
+
+        loadedImage.src = path;
+    }
+
     fileInput.addEventListener("change", openModalWindow);
     closeModal.addEventListener("click", closeModalWindow);
     cancelBtn.addEventListener("click", closeModalWindow);
+    saveBtn.addEventListener("click", saveImage);
 });
