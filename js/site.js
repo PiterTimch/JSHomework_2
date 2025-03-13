@@ -10,10 +10,10 @@
     let uploadedImageURL;
     let cropper;
 
-    cropper = new Cropper(previewImage, {
-        aspectRatio: 1,
-        viewMode: 1 
-    });
+    //cropper = new Cropper(previewImage, {
+    //    aspectRatio: 1,
+    //    viewMode: 1
+    //});
 
     if (!fileInput || !modal || !closeModal || !cancelBtn || !previewImage) {
         console.error("Помилка: Один або кілька елементів не знайдено!");
@@ -45,6 +45,8 @@
                     aspectRatio: 1,
                     viewMode: 1
                 });
+
+
             }
             else {
                 window.alert('Please choose an image file.');
