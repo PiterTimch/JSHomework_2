@@ -4,21 +4,17 @@
     const closeModal = document.getElementById("closeModal");
     const cancelBtn = document.getElementById("cancelBtn");
     const saveBtn = document.getElementById("saveBtn");
-    const previewImage = document.getElementById("previewImage");
+    const croppingImage = document.getElementById("croppingImage");
     const loadedImage = document.getElementById("loadedImage");
+    const previewImage = document.getElementById("previewImage");
+
+    const leftTurn = document.getElementById("leftTurn");
+    const rightTurn = document.getElementById("rightTurn");
+    const horizontalTurn = document.getElementById("horizontalTurn");
+    const verticalTurn = document.getElementById("verticalTurn");
 
     let uploadedImageURL;
     let cropper;
-
-    //cropper = new Cropper(previewImage, {
-    //    aspectRatio: 1,
-    //    viewMode: 1
-    //});
-
-    if (!fileInput || !modal || !closeModal || !cancelBtn || !previewImage) {
-        console.error("Помилка: Один або кілька елементів не знайдено!");
-        return;
-    }
 
     function openModalWindow(e) {
         modal.classList.remove("hidden");
@@ -35,22 +31,33 @@
                     URL.revokeObjectURL(uploadedImageURL);
                 }
 
-                previewImage.src = uploadedImageURL = URL.createObjectURL(file);
+                croppingImage.src = uploadedImageURL = URL.createObjectURL(file);
 
                 if (cropper) {
                     cropper.destroy();
                 }
 
-                cropper = new Cropper(previewImage, {
+                cropper = new Cropper(croppingImage, {
                     aspectRatio: 1,
-                    viewMode: 1
+                    viewMode: 1,
+                    autoCrop: true,
+                    crop() {
+                        updatePreview();
+                    }
                 });
 
 
             }
             else {
-                window.alert('Please choose an image file.');
+                alert('Please choose an image file.');
             }
+        }
+    }
+
+    function updatePreview() {
+        if (cropper) {
+            const base64 = cropper.getCroppedCanvas().toDataURL(); // Отримуємо Base64
+            previewImage.src = base64; // Оновлюємо прев'ю в реальному часі
         }
     }
 
@@ -89,6 +96,32 @@
         }
 
         loadedImage.src = path;
+    }
+
+    // кнопки редагування
+
+    leftTurn.onclick = () => {
+        if (cropper) {
+            cropper.rotate(-90);
+        }
+    }
+
+    rightTurn.onclick = () => {
+        if (cropper) {
+            cropper.rotate(90);
+        }
+    }
+
+    verticalTurn.onclick = () => {
+        if (cropper) {
+            cropper.rotate(180);
+        }
+    }
+
+    horizontalTurn.onclick = () => {
+        if (cropper) {
+            cropper.scaleX(-cropper.getData().scaleX || -1);
+        }
     }
 
     fileInput.addEventListener("change", openModalWindow);
