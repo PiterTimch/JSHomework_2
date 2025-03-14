@@ -1,17 +1,11 @@
-﻿<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма реєстрації</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/css/cropper.min.css" rel="stylesheet" />
-
-</head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
-    <form id="registerForm" class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md space-y-6 border border-gray-300">
-        <h2 class="text-2xl font-bold text-center text-[#009e86]">Реєстрація</h2>
+﻿<div id="userEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg w-[400px]">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h5 class="text-lg font-semibold">Обріжте фото</h5>
+            <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                ✕
+            </button>
+        </div>
 
         <div class="flex gap-4">
             <div>
@@ -97,32 +91,9 @@
 
         <p class="text-sm text-[#bf0000] hidden" id="errorMessage"></p>
 
-        <div class="flex gap-4">
-            <button type="submit" class="bg-[#009e86] text-white font-bold p-3 rounded-lg hover:scale-105 hover:bg-[#00c2a5] transition-transform duration-300 active:scale-95 shadow-md">
-                Зареєструватися
-            </button>
-            <button type="reset" class="btn bg-gray-300 text-gray-800 font-bold p-3 rounded-lg hover:scale-105 hover:bg-gray-400 transition-transform duration-300 active:scale-95 shadow-md">
-                Очистити
-            </button>
+        <div class="flex justify-end gap-2 p-4 border-t">
+            <button id="saveBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md">Зберегти</button>
+            <button id="cancelBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md">Закрити</button>
         </div>
-
-    </form>
-
-    <script src="https://unpkg.com/imask"></script>
-    <script src="/js/site.js"></script>
-    <script src="/js/loader.js"></script>
-
-    <script src="/js/cropper.min.js"></script>
-
-    <script>loadDOM('/partials/modal.html')</script>
-
-    <script>
-        IMask(
-            document.getElementById('phone'),
-            {
-                mask: '+{38}(000)000-00-00'
-            }
-        )
-    </script>
-</body>
-</html>
+    </div>
+</div>

@@ -7,6 +7,7 @@
     const croppingImage = document.getElementById("croppingImage");
     const loadedImage = document.getElementById("loadedImage");
     const previewImage = document.getElementById("previewImage");
+    const registerForm = document.getElementById("registerForm");
 
     const leftTurn = document.getElementById("leftTurn");
     const rightTurn = document.getElementById("rightTurn");
@@ -15,6 +16,45 @@
 
     let uploadedImageURL;
     let cropper;
+
+    registerForm.onsubmit = (e) => {
+        e.preventDefault();
+
+        const formData = {
+            id: crypto.randomUUID(),
+            first_name: document.getElementById("first_name").value,
+            last_name: document.getElementById("last_name").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value,
+            avatar: document.getElementById("loadedImage").src
+        }
+        const oldItems = JSON.parse(localStorage.users ?? "[]");
+
+        const isDuplicate = oldItems.some(user =>
+            user.email === formData.email ||
+            user.phone === formData.phone ||
+            user.username === formData.username
+        );
+
+        if (isDuplicate) {
+            showError("Користувач з таким email, телефоном або username вже існує!");
+            return;
+        }
+
+        let items = [...oldItems, formData];
+
+        let json = JSON.stringify(items);
+        localStorage.setItem("users", json);
+        location.href = "/pages/userList.html";
+    }
+
+    function showError(message) {
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.classList.remove("hidden");
+        errorMessage.innerText = message;
+    }
 
     function openModalWindow(e) {
         modal.classList.remove("hidden");
