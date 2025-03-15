@@ -26,23 +26,49 @@ let currUserId;
 const users = JSON.parse(localStorage.users);
 
 users.forEach(user => {
-    const userCard = document.createElement("div");
-    userCard.className = "flex items-center space-x-4 p-4 bg-gray-50 rounded-lg shadow hover:bg-gray-300 hover:shadow-lg transition cursor-pointer";
-    userCard.innerHTML = `
-                <img class="w-16 h-16 rounded-full" src="${user.avatar}" alt="${user.first_name} ${user.last_name}">
-                <div>
-                    <p class="text-lg font-medium text-gray-900">${user.first_name} ${user.last_name}</p>
-                    <p class="text-gray-600">${user.email}</p>
-                    <p class="text-gray-600">${user.phone}</p>
-                    <p class="text-gray-500">@${user.username}</p>
-                </div>
-            `;
-    userCard.setAttribute("data-user-id", user.id);
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex items-center justify-between w-full";
 
+    const userCard = document.createElement("div");
+    userCard.className = "flex items-center space-x-4 p-4 bg-gray-50 rounded-lg shadow hover:bg-gray-300 hover:shadow-lg transition cursor-pointer w-full";
+    userCard.innerHTML = `
+        <img class="w-16 h-16 rounded-full" src="${user.avatar}" alt="${user.first_name} ${user.last_name}">
+        <div>
+            <p class="text-lg font-medium text-gray-900">${user.first_name} ${user.last_name}</p>
+            <p class="text-gray-600">${user.email}</p>
+            <p class="text-gray-600">${user.phone}</p>
+            <p class="text-gray-500">@${user.username}</p>
+        </div>
+    `;
+    userCard.setAttribute("data-user-id", user.id);
     userCard.onclick = openEditedModal;
 
-    userList.appendChild(userCard);
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "p-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition ml-4";
+    deleteBtn.innerText = "✖";
+    deleteBtn.setAttribute("data-user-id", user.id);
+    deleteBtn.onclick = deleteUser;
+
+    wrapper.appendChild(userCard);
+    wrapper.appendChild(deleteBtn);
+
+    userList.appendChild(wrapper);
 });
+
+function deleteUser(e) {
+    e.stopPropagation();
+
+    const userId = e.target.dataset.userId;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    users = users.filter(user => user.id != userId);
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    location.href = "/pages/userList.html";
+}
+
 
 function openEditedModal(e) {
 
@@ -113,7 +139,7 @@ fileInput.onchange = (e) => {
 
         }
         else {
-            alert('Please choose an image file.');
+            showError('Please choose an image file.');
         }
     }
 }
@@ -146,6 +172,11 @@ function saveEditedModal() {
         username: document.getElementById("username").value,
         avatar: document.getElementById("loadedImage").src
     };
+
+    if (newData.first_name == "" || newData.last_name == "" || newData.email == "" || newData.phone == "" || newData.username == "") {
+        showError("Заповніть усі поля!");
+        return;
+    }
 
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
@@ -188,6 +219,36 @@ function loadNewImage(path) {
     loadedImage.src = path;
 }
 
+function showError(message) {
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.classList.remove("hidden");
+    errorMessage.innerText = message;
+}
+
+leftTurn.onclick = () => {
+    if (cropper) {
+        cropper.rotate(-90);
+    }
+}
+
+rightTurn.onclick = () => {
+    if (cropper) {
+        cropper.rotate(90);
+    }
+}
+
+verticalTurn.onclick = () => {
+    if (cropper) {
+        cropper.rotate(180);
+    }
+}
+
+horizontalTurn.onclick = () => {
+    if (cropper) {
+        cropper.scaleX(-cropper.getData().scaleX || -1);
+    }
+}
+
 closeUserModal.onclick = closeEditedModal;
 cancelUserBtn.onclick = closeEditedModal;
 saveUserBtn.onclick = saveEditedModal;
@@ -195,12 +256,3 @@ saveUserBtn.onclick = saveEditedModal;
 closeFileModal.onclick = closeFileModalFunc;
 cancelFileBtn.onclick = closeFileModalFunc;
 saveFileBtn.onclick = saveFileModalFunc;
-
-window.onclick = (event) => {
-    if (event.target === userEditModal) {
-        closeEditedModal();
-    }
-    if (event.target === modal) {
-        closeFileModalFunc();
-    }
-};
