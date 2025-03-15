@@ -96,8 +96,8 @@
 
     function updatePreview() {
         if (cropper) {
-            const base64 = cropper.getCroppedCanvas().toDataURL(); // Отримуємо Base64
-            previewImage.src = base64; // Оновлюємо прев'ю в реальному часі
+            const base64 = cropper.getCroppedCanvas().toDataURL();
+            previewImage.src = base64;
         }
     }
 
@@ -126,7 +126,7 @@
             loadNewImage(base64);
         }
 
-        closeModalWindow()
+        closeModalWindow();
     }
 
     function loadNewImage(path) {
