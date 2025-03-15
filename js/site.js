@@ -42,6 +42,10 @@
             showError("Користувач з таким email, телефоном або username вже існує!");
             return;
         }
+        if (!(loadedImage.src.includes("data"))) {
+            showError("Фото обов'язкове!");
+            return;
+        }
 
         let items = [...oldItems, formData];
 
